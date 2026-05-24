@@ -6,8 +6,9 @@ namespace Domain.Entities;
 
 public sealed class Technician : Staff
 {
-	public ICollection<TechnicianCapability> Capabilities { get; set; } = [];
 	private readonly List<Ticket> _assignedTickets = [];
+
+	public required ICollection<TechnicianCapability> Capabilities { get; set; } = [];
 	public IReadOnlyCollection<Ticket> AssignedTickets => _assignedTickets.AsReadOnly();
 
 	public Technician()
@@ -15,7 +16,12 @@ public sealed class Technician : Staff
 		Role = UserRole.Technician;
 	}
 
-	public void AssignedTicket(Ticket ticket)
+	public void AddCapability(TechnicianCapability capability)
+	{
+		Capabilities.Add(capability);
+	}
+
+	public void AssignTicket(Ticket ticket)
 	{
 		_assignedTickets.Add(ticket);
 	}

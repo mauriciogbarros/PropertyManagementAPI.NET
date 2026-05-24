@@ -6,7 +6,6 @@ namespace Domain.Entities;
 
 public sealed class Manager : Staff
 {
-
 	public Manager()
 	{
 		Role = UserRole.Manager;

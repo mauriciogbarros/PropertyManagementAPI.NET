@@ -4,6 +4,6 @@ using Domain.ValueObjects;
 namespace Domain.Entities.Abstractions;
 public abstract class User : BaseEntity
 {
-	public UserInfo UserInfo { get; set; } = default!;
-	public UserRole Role { get; init; }
+	public required UserInfo UserInfo { get; set; }
+	public required UserRole Role { get; init; }
 }

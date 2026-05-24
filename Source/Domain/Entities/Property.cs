@@ -6,6 +6,10 @@ namespace Domain.Entities;
 public sealed class Property
 {
 	public PropertyInfo? Info { get; init; } = default;
-	public ICollection<Unit> Units { get; set; } = [];
-	public ICollection<User> Users { get; set; } = [];
+	
+	private readonly List<Unit> _units = [];
+	public IReadOnlyCollection<Unit> Units => _units.AsReadOnly();
+
+	private readonly List<User> _users = [];
+	public IReadOnlyCollection<User> Users => _users.AsReadOnly();
 }

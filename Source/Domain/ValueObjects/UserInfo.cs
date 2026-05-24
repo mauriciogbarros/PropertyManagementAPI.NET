@@ -2,9 +2,8 @@ namespace Domain.ValueObjects;
 
 public record UserInfo
 {
-	public string FirstName { get; set; } = string.Empty;
-	public string LastName { get; set; } = string.Empty;
-	public string Email { get; set; } = string.Empty;
-	public string PhoneNumber { get; set; }  = string.Empty;
-	public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+	public string FirstName { get; init; } = string.Empty;
+	public string LastName { get; init; } = string.Empty;
+	public string Email { get; init; } = string.Empty;
+	public string PhoneNumber { get; init; }  = string.Empty;
 }

@@ -1,6 +1,6 @@
 using Domain.Entities.Abstractions;
 using Domain.Enums;
-using Domain.ValueObjects;
+using Domain.Results;
 
 namespace Domain.Entities;
 
@@ -21,8 +21,20 @@ public sealed class Technician : Staff
 		Capabilities.Add(capability);
 	}
 
-	public void AssignTicket(Ticket ticket)
+	public Result AssignTicket(Ticket ticket)
 	{
+		if (ticket is null)
+			return Result.Failure(
+				new Error("Technician.TicketNull", "Ticket cannot be null.")
+			);
+
+		if (_assignedTickets.Any(t => t.Id == ticket.Id))
+			return Result.Failure(
+				new Error("Technician.TicketAlreadyAssigned", "Ticket has already been assigned to this technician.")
+			);
+
 		_assignedTickets.Add(ticket);
+
+		return Result.Success();
 	}
 }

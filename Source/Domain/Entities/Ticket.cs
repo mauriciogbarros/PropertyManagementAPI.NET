@@ -1,5 +1,6 @@
 using Domain.Entities.Abstractions;
 using Domain.Enums;
+using Domain.Results;
 using Domain.ValueObjects;
 
 namespace Domain.Entities;
@@ -16,20 +17,32 @@ public sealed class Ticket : BaseEntity
 	public Technician? AssignedTechnician { get; private set; } = null;
 	public IReadOnlyCollection<TicketComment> Comments => _comments.AsReadOnly();
 
-	public void AddComment(TicketComment comment)
+	public Result AddComment(TicketComment comment)
 	{
-		ArgumentNullException.ThrowIfNull(comment);
+		if (comment is null)
+			return Result.Failure(
+				new Error("Ticket.CommentNull", "Comment cannot be null")
+			);
 		
 		_comments.Add(comment);
+
+		return Result.Success();
 	}
 
-	public void AssignTechnician(Technician technician)
+	public Result AssignTechnician(Technician technician)
 	{
-		ArgumentNullException.ThrowIfNull(technician);
+		if (technician is null)
+			return Result.Failure(
+				new Error("Ticket.AssignedTechnicianNull", "Assigned technician cannot be null.")
+			);
 
 		if (Status == TicketStatus.Closed)
-			throw new InvalidOperationException("Cannot assign a technician to a closed ticket.");
+			return Result.Failure(
+				new Error("Ticket.TicketClosed", "Cannot assign a technician to a closed ticket.")
+			);
 
 		AssignedTechnician = technician;
+
+		return Result.Success();
 	}
 }

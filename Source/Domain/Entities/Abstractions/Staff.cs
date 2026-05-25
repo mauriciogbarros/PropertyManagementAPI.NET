@@ -1,30 +1,35 @@
+using Domain.Results;
+
 namespace Domain.Entities.Abstractions;
 
 public class Staff : User
 {
-	private DateTimeOffset? _terminationDate = null;
-	private decimal _hourlyRate;
-
 	public required Property Property { get; set; }
-	public DateTimeOffset? TerminationDate
-	{
-		get => _terminationDate;
-		set
-		{
-			if (TerminationDate <= CreatedAt)
-				throw new ArgumentException("Termination date must be greater than user creation date.");
+	public DateTimeOffset? TerminationDate { get; private set; }
+	public decimal HourlyRate { get; private set; }
 
-			_terminationDate = TerminationDate;
-		}
-	}
-	public required decimal HourlyRate
+	public Result SetHourlyRate(decimal hourlyRate)
 	{
-		get => _hourlyRate;
-		set
-		{
-			if (HourlyRate < 0)
-				throw new ArgumentException("Hourly rate must be greater than $0.00", nameof(HourlyRate));
-			_hourlyRate = HourlyRate;
-		} 
+		if (hourlyRate < 0)
+			return Result.Failure(
+				new Error("Staff.HourlyRateNegative", "Hourly rate must be greater than $0.00")
+			);
+
+		HourlyRate = hourlyRate;
+
+		return Result.Success();
+	} 
+
+
+	public Result TerminateStaff(DateTimeOffset terminationDate)
+	{
+		if (terminationDate < CreatedAt)
+			return Result.Failure(
+				new Error("Staff.TerminateBeforeCreate", "Termination date cannot be prior to creation date.")
+			);
+
+		TerminationDate = terminationDate;
+
+		return Result.Success();
 	}
 }

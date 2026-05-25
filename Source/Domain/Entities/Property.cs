@@ -1,4 +1,5 @@
 using Domain.Entities.Abstractions;
+using Domain.Results;
 using Domain.ValueObjects;
 
 namespace Domain.Entities;
@@ -12,21 +13,37 @@ public sealed class Property
 	public IReadOnlyCollection<Unit> Units => _units.AsReadOnly();
 	public IReadOnlyCollection<User> Users => _users.AsReadOnly();
 
-	public void AddUnit(Unit unit)
+	public Result AddUnit(Unit unit)
 	{
-		ArgumentNullException.ThrowIfNull(unit);
+		if (unit is null)
+			return Result.Failure(
+				new Error("Property.NullUnit", "Unit cannot be null.")
+			);
+
 		if(_units.Any(u => u.Id == unit.Id))
-			throw new InvalidOperationException("Unit already exists in this property.");
+			return Result.Failure(
+				new Error("Property.UnitAlreadyExists", "Unit already exists in this property.")
+			);
 
 		_units.Add(unit);
+
+		return Result.Success();
 	}
 
-	public void AddUser(User user)
+	public Result AddUser(User user)
 	{
-		ArgumentNullException.ThrowIfNull(user);
+		if (user is null)
+			return Result.Failure(
+				new Error("Property.UserNull", "User cannot be null.")
+			);
+
 		if (_users.Any(u => u.Id == user.Id))
-			throw new InvalidOperationException("User already exists in this property.");
+			return Result.Failure(
+				new Error("Property.UserAlreadyExists", "User already exists in this property.")
+			);
 			
 		_users.Add(user);
+
+		return Result.Success();
 	}
 }

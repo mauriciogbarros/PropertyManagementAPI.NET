@@ -4,7 +4,7 @@ using Domain.ValueObjects;
 
 namespace Domain.Entities;
 
-public sealed class Property
+public sealed class Property : BaseEntity
 {
 	private readonly List<Unit> _units = [];
 	private readonly List<User> _users = [];
